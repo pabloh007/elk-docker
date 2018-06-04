@@ -136,6 +136,8 @@ ADD ./02-beats-input.conf ${LOGSTASH_PATH_CONF}/conf.d/02-beats-input.conf
 ADD ./10-syslog.conf ${LOGSTASH_PATH_CONF}/conf.d/10-syslog.conf
 ADD ./11-nginx.conf ${LOGSTASH_PATH_CONF}/conf.d/11-nginx.conf
 ADD ./30-output.conf ${LOGSTASH_PATH_CONF}/conf.d/30-output.conf
+ADD ./02-logstash-input-tcp.conf ${LOGSTASH_PATH_CONF}/conf.d/02-logstash-input-tcp.conf
+ADD ./02-logstash-input-udp.conf ${LOGSTASH_PATH_CONF}/conf.d/02-logstash-input-udp.conf
 
 # patterns
 ADD ./nginx.pattern ${LOGSTASH_HOME}/patterns/nginx
@@ -143,6 +145,11 @@ RUN chown -R logstash:logstash ${LOGSTASH_HOME}/patterns
 
 # Fix permissions
 RUN chmod -R +r ${LOGSTASH_PATH_CONF}
+
+# Install Plugins
+WORKDIR ${LOGSTASH_HOME}
+RUN gosu logstash bin/logstash-plugin install logstash-input-tcp
+RUN gosu logstash bin/logstash-plugin install logstash-input-udp
 
 ### configure logrotate
 
